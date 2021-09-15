@@ -1,0 +1,51 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+<#@ include file="Helpers.ttinclude" #>
+<# OutputGeneratedCodeHeader(); #>
+
+using System;
+
+namespace PendleCodeMonkey.FunctionalLib
+{
+	using static FnLib;
+
+	public static partial class OptionExtensions
+	{
+		#region Partial Application
+
+		public static Option<R> Apply<T, R>
+			(this Option<Func<T, R>> opt, Option<T> arg)
+			=> opt.Match(
+			() => None,
+			(func) => arg.Match(
+				() => None,
+				(val) => Some(func(val))));
+
+		public static Option<Func<T2, R>> Apply<T1, T2, R>
+			(this Option<Func<T1, T2, R>> opt, Option<T1> arg)
+			=> Apply(opt.Map(FnLib.Curry), arg);
+
+<#  for (var i = 3; i <= MaxCurryFuncArity(); i++) { #>
+		public static Option<<#= FuncType(i, except:1) #>> Apply<<#= FuncTypes(i) #>>(this Option<<#= FuncType(i) #>> opt, Option<T1> arg)
+			=> Apply(opt.Map(FnLib.CurryFirst), arg);
+<# } #>
+
+		#endregion
+
+		#region Map
+
+		public static Option<Func<T2, R>> Map<T1, T2, R>(this Option<T1> opt, Func<T1, T2, R> func)
+			=> opt.Map(func.Curry());
+
+<#  for (var i = 3; i <= MaxCurryFuncArity(); i++) { #>
+		public static Option<<#= FuncType(i, except:1) #>> Map<<#= FuncTypes(i) #>>(this Option<T1> opt, <#= FuncType(i) #> func)
+			=> opt.Map(func.CurryFirst());
+<# } #>
+
+		#endregion
+	}
+}

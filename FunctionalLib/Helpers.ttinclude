@@ -1,0 +1,143 @@
+﻿<#+
+    public int MaxArity()
+    {
+        return 21;
+    }
+
+    public int MaxUnionArity()
+    {
+        return 8;
+    }
+
+    public int MaxCurryFuncArity()
+    {
+        return 10;
+    }
+
+    public int MaxFuncArity()
+    {
+        return 16;
+    }
+
+    public int MaxMemoizeArity()
+    {
+        return 8;
+    }
+
+    public int MaxActionExtArity()
+    {
+        return 8;
+    }
+
+    // A single generic type (e.g. "T4" [when i is 4])
+    public string Type(int i, string name = "T")
+    {
+        return name + i;
+    }
+
+    // Generic type list [does not include return type] (e.g. "T1, T2, T3, T4")
+    public string Types(int i, string name = "T", int? except = null, bool appendSeparator = false)
+    {
+        return List(i, x => Type(x, name), except: except, appendSeparator: appendSeparator);
+    }
+
+    // Bracketed generic type list [does not include return type] (e.g. "<T1, T2, T3, T4>")
+    public string BracketedTypes(int i, string name = "T", int? except = null)
+    {
+        if (i == 0 || except.HasValue && i == 1)
+        {
+            return "";
+        }
+        return "<" + Types(i, name: name, except: except) + ">";
+    }
+
+    // Function types [includes return type] (e.g. "T1, T2, T3, TResult")
+    public string FuncTypes(int i, string resultTypeName = "TResult", string name = "T", int? except = null)
+    {
+        return Types(i, name, except, appendSeparator: true) + resultTypeName;
+    }
+
+    // Function type list [includes return type] (e.g. "Func<T1, T2, T3, TResult>")
+    public string FuncType(int i, string resultTypeName = "TResult", string name = "T", int? except = null)
+    {
+        return "Func<" + FuncTypes(i, resultTypeName, name, except) + ">";
+    }
+
+    // Function types in a format specifically for currying [includes return type] (e.g. "Func<T1, Func<T2, Func<T3, Func<T4, TResult>>>>")
+    public string CurriedFuncReturnType(int i, string resultTypeName = "TResult", string name = "T", int? except = null)
+    {
+        string s = "";
+        for (int j = i; j >= 1; j--)
+        {
+            if (except.HasValue && except.Value == j)
+            {
+                continue;
+            }
+            if (j == i)
+            {
+                s = $"Func<{name}{j}, {resultTypeName}>";
+            }
+            else
+            {
+                s = $"Func<{name}{j}, {s}>";
+            }
+        }
+        return s;
+    }
+
+    // A single value type [with lowercase name] (e.g. "t2" [when i is 2])
+    public string Value(int i, string name = "T")
+    {
+        return Type(i, name: name).ToLowerInvariant();
+    }
+
+    // Comma separated list of value types [with lowercase names] (e.g. "t1, t2, t3, t4" [when i is 4])
+    public string Values(int i, string name = "T", int? except = null) 
+    {
+        return Types(i, name: name, except: except).ToLowerInvariant();
+    }
+
+    // A single generic parameter (e.g. "T3 t3" [when i is 3])
+    public string Parameter(int i, string name = "T")
+    {
+        return Type(i, name: name) + " " + Value(i, name: name);
+    }
+
+    // Comma separated list of generic parameters (e.g. "T1 t1, T2 t2, T3 t3, T4 t4" [when i is 4])
+    public string Parameters(int i, string name = "T", int? except = null, bool appendSeparator = false)
+    {
+        return List(i, x => Parameter(x, name: name), appendSeparator: appendSeparator);
+    }
+
+    // Returns a string containing a list of numElems elements separated by a specified separator string (comma separated by default).
+    // The itemGenerator Func determines the contents of each element.
+    // The except parameter can be used to exclude a numbered element from the list
+    public string List(int numElems, Func<int, string> itemGenerator, int? except = null, string separator = ", ", bool appendSeparator = false)
+    {
+        var numbers = Enumerable.Range(1, Math.Max(0, numElems));
+        if (except.HasValue)
+        {
+            numbers = numbers.Except(new[] { except.Value });
+        }
+        var result = String.Join(separator, numbers.Select(itemGenerator));
+        if (appendSeparator && !String.IsNullOrEmpty(result))
+        {
+            result += separator;
+        }
+        return result;
+    }
+
+    // Outputs header that indicates that the contents of the file is generated code and therefore should not be edited.
+    public void OutputGeneratedCodeHeader()
+    {
+        this.WriteLine("//  ******************************************");
+        this.WriteLine("//  *                                        *");
+        this.WriteLine("//  *   **********************************   *");
+        this.WriteLine("//  *   *                                *   *");
+        this.WriteLine("//  *   *  GENERATED CODE. DO NOT EDIT!  *   *");
+        this.WriteLine("//  *   *                                *   *");
+        this.WriteLine("//  *   **********************************   *");
+        this.WriteLine("//  *                                        *");
+        this.WriteLine("//  ******************************************");
+    }
+#>

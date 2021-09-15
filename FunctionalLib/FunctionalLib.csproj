@@ -1,0 +1,147 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>PendleCodeMonkey.FunctionalLib</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="ActionExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ActionExtensionsGenerated.tt</DependentUpon>
+    </None>
+    <None Include="EnumerableExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EnumerableExtensionsGenerated.tt</DependentUpon>
+    </None>
+    <None Include="FnLibGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FnLibGenerated.tt</DependentUpon>
+    </None>
+    <None Include="FuncExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FuncExtensionsGenerated.tt</DependentUpon>
+    </None>
+    <None Include="Memoizer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Memoizer.tt</DependentUpon>
+    </None>
+    <None Include="OptionExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OptionExtensionsGenerated.tt</DependentUpon>
+    </None>
+    <None Include="Union.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Union.tt</DependentUpon>
+    </None>
+    <None Include="ValidationExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ValidationExtensionsGenerated.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ActionExtensionsGenerated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ActionExtensionsGenerated.cs</LastGenOutput>
+    </None>
+    <None Update="EnumerableExtensionsGenerated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EnumerableExtensionsGenerated.cs</LastGenOutput>
+    </None>
+    <None Update="FnLibGenerated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FnLibGenerated.cs</LastGenOutput>
+    </None>
+    <None Update="FuncExtensionsGenerated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FuncExtensionsGenerated.cs</LastGenOutput>
+    </None>
+    <None Update="Memoizer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Memoizer.cs</LastGenOutput>
+    </None>
+    <None Update="OptionExtensionsGenerated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OptionExtensionsGenerated.cs</LastGenOutput>
+    </None>
+    <None Update="Union.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Union.cs</LastGenOutput>
+    </None>
+    <None Update="ValidationExtensionsGenerated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ValidationExtensionsGenerated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ActionExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ActionExtensionsGenerated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="EnumerableExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EnumerableExtensionsGenerated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="FnLibGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FnLibGenerated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="FuncExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FuncExtensionsGenerated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Memoizer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Memoizer.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Memoizer2.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Memoizer2.tt</DependentUpon>
+    </Compile>
+    <Compile Update="OptionExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OptionExtensionsGenerated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Union.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Union.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Union1.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Union1.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ValidationExtensionsGenerated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ValidationExtensionsGenerated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

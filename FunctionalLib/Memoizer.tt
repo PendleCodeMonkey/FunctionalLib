@@ -1,0 +1,66 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+<#@ include file="Helpers.ttinclude" #>
+<# OutputGeneratedCodeHeader(); #>
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+
+namespace PendleCodeMonkey.FunctionalLib
+{
+	public static class Memoizer
+	{
+		public static Func<TResult> Memoize<TResult>(Func<TResult> func)
+		{
+			object cache = null;
+			return () =>
+			{
+				if (cache == null)
+				{
+					cache = func();
+				}
+				return (TResult)cache;
+			};
+		}
+
+<#  for (var i = 1; i <= MaxMemoizeArity(); i++) { #>
+
+		public static <#= FuncType(i) #> Memoize<<#= FuncTypes(i) #>>(<#= FuncType(i) #> func)
+		{
+			var cache = new Dictionary<<# if (i != 1) this.Write("("); #><#= Types(i) #><# if (i != 1) this.Write(")"); #>, TResult>();
+			return (<#= Values(i) #>) =>
+			{
+				if (cache.TryGetValue(<# if (i != 1) this.Write("("); #><#= Values(i) #><# if (i != 1) this.Write(")"); #>, out TResult value))
+				{
+					return value;
+				}
+				value = func(<#= Values(i) #>);
+				cache.Add(<# if (i != 1) this.Write("("); #><#= Values(i) #><# if (i != 1) this.Write(")"); #>, value);
+				return value;
+			};
+		}
+<# } #>
+
+		public static Func<T1, TResult> ThreadSafeMemoize<T1, TResult>(Func<T1, TResult> func)
+		{
+			var cache = new ConcurrentDictionary<T1, TResult>();
+			return t1 => cache.GetOrAdd(t1, func);
+		}
+
+<#  for (var i = 2; i <= MaxMemoizeArity(); i++) { #>
+
+		public static <#= FuncType(i) #> ThreadSafeMemoize<<#= FuncTypes(i) #>>(<#= FuncType(i) #> func)
+		{
+			var cache = new ConcurrentDictionary<<# if (i != 1) this.Write("("); #><#= Types(i) #><# if (i != 1) this.Write(")"); #>, TResult>();
+			return (<#= Values(i) #>) => cache.GetOrAdd((<#= Values(i) #>),
+							tuple => func(<# for (var j = 1; j <= i; j++) { #>tuple.Item<#= j #><# if (j < i) this.Write(", "); #><# } #>));
+		}
+<# } #>
+
+	}
+}

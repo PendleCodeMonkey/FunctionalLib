@@ -1,0 +1,31 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+<#@ include file="Helpers.ttinclude" #>
+<# OutputGeneratedCodeHeader(); #>
+
+using System;
+
+namespace PendleCodeMonkey.FunctionalLib
+{
+	public static partial class ValidationExtensions
+	{
+
+		public static Validation<Func<T2, TResult>> Apply<T1, T2, TResult>(this Validation<Func<T1, T2, TResult>> thisValidation, Validation<T1> arg)
+			=> Apply(thisValidation.Map(FnLib.Curry), arg);
+<#  for (var i = 3; i <= MaxCurryFuncArity(); i++) { #>
+		public static Validation<<#= FuncType(i, except:1) #>> Apply<<#= FuncTypes(i) #>>(this Validation<<#= FuncType(i) #>> valid, Validation<T1> arg)
+			=> Apply(valid.Map(FnLib.CurryFirst), arg);
+<# } #>
+
+		public static Validation<Func<T2, TResult>> Map<T1, T2, TResult>(this Validation<T1> thisValidation, Func<T1, T2, TResult> func)
+			=> thisValidation.Map(func.Curry());
+<#  for (var i = 3; i <= MaxCurryFuncArity(); i++) { #>
+		public static Validation<<#= FuncType(i, except:1) #>> Map<<#= FuncTypes(i) #>>(this Validation<T1> thisValidation, <#= FuncType(i) #> func)
+			=> thisValidation.Map(func.CurryFirst());
+<# } #>
+	}
+}

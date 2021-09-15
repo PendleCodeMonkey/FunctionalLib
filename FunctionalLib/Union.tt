@@ -1,0 +1,74 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+<#@ include file="Helpers.ttinclude" #>
+<# OutputGeneratedCodeHeader(); #>
+
+using System;
+
+namespace PendleCodeMonkey.FunctionalLib
+{
+<#  for (var i = 2; i <= MaxUnionArity(); i++) { #>
+	public class Union<#= BracketedTypes(i) #>
+	{
+        private readonly short _type;
+
+<#  for (var j = 1; j <= i; j++) { #>
+		private readonly T<#= j #> _t<#= j #>;
+<# } #>
+
+<#  for (var j = 1; j <= i; j++) { #>
+        public bool IsT<#= j #> => _type == <#= j #>;
+<# } #>
+
+<#  for (var j = 1; j <= i; j++) { #>
+        private Union(T<#= j #> t<#= j #>)
+        {
+            _type = <#= j #>;
+            _t<#= j #> = t<#= j #>;
+        }
+<# } #>
+
+<#  for (var j = 1; j <= i; j++) { #>
+        public static Union<#= BracketedTypes(i) #> FromT<#= j #>(T<#= j #> t<#= j #>) => new Union<#= BracketedTypes(i) #>(t<#= j #>);
+<# } #>
+
+<#  for (var j = 1; j <= i; j++) { #>
+        public static implicit operator Union<#= BracketedTypes(i) #>(T<#= j #> t<#= j #>) => new Union<#= BracketedTypes(i) #>(t<#= j #>);
+<# } #>
+
+        public R Match<R>(<#  for (var j = 1; j <= i; j++) { #>Func<<#= Type(j) #>, R> onT<#= j #><# if (j < i) this.Write(","); #><# } #>)
+            {
+            switch (_type)
+            {
+<#  for (var j = 1; j <= i; j++) { #>
+<# if (j < i) { #>
+                case <#= j #>:
+<# } else { #>
+                default:
+<# } #>
+                    return onT<#= j #>(_t<#= j #>);
+<# } #>
+            }
+        }
+
+        public override string ToString()
+        {
+            switch (_type)
+            {
+<#  for (var j = 1; j <= i; j++) { #>
+<# if (j < i) { #>
+                case <#= j #>:
+<# } else { #>
+                default:
+<# } #>
+                    return $"{_t<#= j #>} [{typeof(<#= Type(j) #>)}]";
+<# } #>
+            }
+        }
+	}
+<# } #>
+}

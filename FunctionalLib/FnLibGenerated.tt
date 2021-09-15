@@ -1,0 +1,35 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+<#@ include file="Helpers.ttinclude" #>
+<# OutputGeneratedCodeHeader(); #>
+
+using System;
+
+namespace PendleCodeMonkey.FunctionalLib
+{
+	public static partial class FnLib
+	{
+		#region Currying
+
+<#  for (var i = 2; i <= MaxCurryFuncArity(); i++) { #>
+		public static <#= CurriedFuncReturnType(i) #> Curry<<#= FuncTypes(i) #>>(this <#= FuncType(i) #> func)
+		=> <# for (var j = 1; j <= i; j++) { #> t<#= j #> =><# } #> func(<#= Values(i) #>);
+<# } #>
+
+<#  for (var i = 3; i <= MaxCurryFuncArity(); i++) { #>
+		public static Func<T1, <#= FuncType(i, except:1) #>> CurryFirst<<#= FuncTypes(i) #>>(this <#= FuncType(i) #> func)
+		=> t1 => (<#= Values(i, except:1) #>) => func(<#= Values(i) #>);
+<# } #>
+
+<#  for (var i = 2; i <= MaxCurryFuncArity(); i++) { #>
+		public static <#= FuncType(i) #> Uncurry<<#= FuncTypes(i) #>>(this <#= CurriedFuncReturnType(i) #> func)
+		=> (<#= Values(i) #>) => func<# for (var j = 1; j <= i; j++) { #>(t<#= j #>)<# } #>;
+<# } #>
+
+		#endregion
+	}
+}

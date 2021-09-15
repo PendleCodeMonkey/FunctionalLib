@@ -1,0 +1,60 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+<#@ include file="Helpers.ttinclude" #>
+<# OutputGeneratedCodeHeader(); #>
+
+using System;
+
+namespace PendleCodeMonkey.FunctionalLib
+{
+	using static FnLib;
+
+	/// <summary>
+	/// Implementation of extension methods for Func delegates.
+	/// </summary>
+	public static partial class FuncExtensions
+	{
+		#region Partial Application
+
+		/// <summary>
+		/// Extension methods that implement partial application of function parameters.
+		/// These methods apply the specified value (t1) as the first parameter to the function, returning a function that
+		/// then takes the remaining parameter(s).
+		/// </summary>
+
+<#  for (var i = 2; i <= MaxCurryFuncArity(); i++) { #>
+		public static <#= FuncType(i, except:1) #> Apply<<#= FuncTypes(i) #>>(this <#= FuncType(i) #> func, T1 t1)
+			=> (<#= Values(i, except:1) #>) => func(<#= Values(i) #>);
+<# } #>
+
+		#endregion
+
+		#region Memoization
+
+		public static Func<R> Memoize<R>(this Func<R> func)
+		{
+			return Memoizer.Memoize(func);
+		}
+
+<#  for (var i = 1; i <= MaxMemoizeArity(); i++) { #>
+		public static <#= FuncType(i) #> Memoize<<#= FuncTypes(i) #>>(this <#= FuncType(i) #> func)
+		{
+			return Memoizer.Memoize(func);
+		}
+<# } #>
+
+<#  for (var i = 1; i <= MaxMemoizeArity(); i++) { #>
+		public static <#= FuncType(i) #> ThreadSafeMemoize<<#= FuncTypes(i) #>>(this <#= FuncType(i) #> func)
+		{
+			return Memoizer.ThreadSafeMemoize(func);
+		}
+<# } #>
+
+		#endregion
+
+	}
+}
